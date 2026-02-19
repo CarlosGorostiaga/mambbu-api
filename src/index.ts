@@ -1,32 +1,33 @@
 import express from 'express';
 import cors from 'cors';
-import propertyRoutes from './routes/properties.js';
+import propertiesRoutes from './routes/properties';
+import adminRoutes from './routes/admin';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
 // Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Mambbu API running' });
-});
-
-// Home
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'Mambbu API v1.0',
     endpoints: {
       health: '/health',
-      properties: '/api/properties'
-    }
+      properties: '/api/properties',
+      admin: '/api/admin',
+    },
   });
 });
 
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Routes
-app.use('/api/properties', propertyRoutes);
+app.use('/api/properties', propertiesRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
