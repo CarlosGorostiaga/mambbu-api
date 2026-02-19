@@ -3,7 +3,67 @@ import prisma from '../lib/prisma.js';
 
 export async function getProperties(req: Request, res: Response) {
   try {
+    const {
+      location,
+      type,
+      minPrice,
+      maxPrice,
+      bedrooms,
+      status = 'available',
+      sortBy = 'newest',
+      page = '1',
+      perPage = '6'
+    } = req.query;
+
+    // Construir filtros
+    const where: any = {
+      status: status as string
+    };
+
+    if (location) {
+      where.location = location as string;
+    }
+
+    if (type) {
+      where.type = type as string;
+    }
+
+    if (minPrice || maxPrice) {
+      where.priceValue = {};
+      if (minPrice) where.priceValue.gte = Number(minPrice);
+      if (maxPrice) where.priceValue.lte = Number(maxPrice);
+    }
+
+    if (bedrooms) {
+      where.bedrooms = { gte: Number(bedrooms) };
+    }
+
+    // Ordenamiento
+    let orderBy: any = { createdAt: 'desc' }; // default: newest
+    
+    if (sortBy === 'price-asc') {
+      orderBy = { priceValue: 'asc' };
+    } else if (sortBy === 'price-desc') {
+      orderBy = { priceValue: 'desc' };
+    } else if (sortBy === 'relevance') {
+      orderBy = [
+        { featured: 'desc' },
+        { newListing: 'desc' },
+        { createdAt: 'desc' }
+      ];
+    }
+
+    // Paginación
+    const pageNum = Number(page);
+    const perPageNum = Number(perPage);
+    const skip = (pageNum - 1) * perPageNum;
+
+    // Contar total
+    const total = await prisma.property.count({ where });
+
+    // Obtener propiedades
     const properties = await prisma.property.findMany({
+      where,
       include: {
         agent: {
           include: {
@@ -11,14 +71,19 @@ export async function getProperties(req: Request, res: Response) {
           }
         }
       },
-      orderBy: {
-        createdAt: 'desc'
-      }
+      orderBy,
+      skip,
+      take: perPageNum
     });
+
+    const totalPages = Math.ceil(total / perPageNum);
 
     res.json({
       success: true,
-      count: properties.length,
+      total,
+      totalPages,
+      currentPage: pageNum,
+      perPage: perPageNum,
       data: properties
     });
   } catch (error) {
