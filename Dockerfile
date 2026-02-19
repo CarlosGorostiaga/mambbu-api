@@ -1,7 +1,25 @@
 FROM node:20-alpine
 
-WORKDIR /workspace
+WORKDIR /app
 
-RUN apk add --no-cache git
+# Copiar package files
+COPY package*.json ./
+COPY prisma ./prisma/
 
-CMD ["sleep", "infinity"]
+# Instalar dependencias
+RUN npm install
+
+# Generar Prisma Client
+RUN npx prisma generate
+
+# Copiar resto del código
+COPY . .
+
+# Build de TypeScript
+RUN npm run build
+
+# Exponer puerto
+EXPOSE 3000
+
+# Comando de inicio
+CMD ["npm", "start"]
