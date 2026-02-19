@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Iniciando seed...');
 
-  // Crear agencia
   const agency = await prisma.agency.create({
     data: {
       name: 'Mambbu Real Estate',
@@ -15,11 +14,10 @@ async function main() {
 
   console.log('✅ Agencia creada:', agency.name);
 
-  // Crear agente
   const agent = await prisma.agent.create({
     data: {
       name: 'Elena Gómez',
-      avatar: 'https://drive.google.com/uc?export=view&id=1yFdcxif8K3kFfDuLL-EpsockPAO7xuco',
+      avatar: 'https://i.ibb.co/213PcgWX/team.png',
       rating: 5,
       reviews: 48,
       responseTime: 'Menos de 1 hora',
@@ -32,12 +30,11 @@ async function main() {
 
   console.log('✅ Agente creado:', agent.name);
 
-  // Crear propiedades
   const properties = [
     {
       slug: 'villa-mar-azul-miramar',
       title: 'Villa Mar Azul',
-      description: 'Villa Mar Azul no es solo una residencia, es un pedazo de la historia de La Habana. Construida originalmente en 1958, esta propiedad neocolonial ha sido meticulosamente restaurada para preservar sus detalles arquitectónicos originales mientras incorpora todas las comodidades modernas.\n\nLa propiedad se distribuye en dos niveles, con un imponente vestíbulo de entrada que conduce a una luminosa sala principal. Amplias puertas francesas se abren hacia un patio interior privado y exuberante, el oasis perfecto para el café de la mañana o cócteles bajo las estrellas.',
+      description: 'Villa Mar Azul no es solo una residencia, es un pedazo de la historia de La Habana. Construida originalmente en 1958, esta propiedad neocolonial ha sido meticulosamente restaurada para preservar sus detalles arquitectónicos originales mientras incorpora todas las comodidades modernas.',
       price: '$425,000',
       priceValue: 425000,
       location: 'Miramar',
@@ -52,13 +49,13 @@ async function main() {
       newListing: true,
       verified: false,
       quickResponse: false,
-      images: JSON.stringify([
-        { url: 'https://drive.google.com/uc?export=view&id=1n6F01gnYtM2YUuG_ioYCadkdxAdYarZk', alt: 'Fachada Villa Mar Azul' },
-        { url: 'https://drive.google.com/uc?export=view&id=1H_c47CdtoMEiuaywBpsVTYmkb8RCmqG4', alt: 'Sala de estar elegante' },
-        { url: 'https://drive.google.com/uc?export=view&id=1vGKp1RbaNBxwMy3ui4DS0GD2hyKwU8z6', alt: 'Jardín tropical' },
-        { url: 'https://drive.google.com/uc?export=view&id=1I1mvDesqWEZ6HN8edqrcenUbnx13spNK', alt: 'Cocina moderna' }
-      ]),
-      amenities: JSON.stringify([
+      images: [
+        { url: 'https://i.ibb.co/pv4bcyms/neighborhood-miramar.png', alt: 'Fachada Villa Mar Azul' },
+        { url: 'https://i.ibb.co/Tq7vQWG7/hero-havana.png', alt: 'Sala de estar elegante' },
+        { url: 'https://i.ibb.co/cS4gcMWs/neighborhood-vedado.png', alt: 'Jardín tropical' },
+        { url: 'https://i.ibb.co/DPZ95jFs/neighborhood-habana-vieja.png', alt: 'Cocina moderna' }
+      ],
+      amenities: [
         'Pisos de mosaico originales',
         'Terraza en azotea',
         'Jardín privado',
@@ -67,13 +64,13 @@ async function main() {
         'Vista al océano',
         'Garaje para 2 vehículos',
         'Aire acondicionado central'
-      ]),
+      ],
       agentId: agent.id
     },
     {
       slug: 'penthouse-someillan-vedado',
       title: 'Penthouse Someillán',
-      description: 'Espectacular penthouse en el corazón del Vedado con vistas panorámicas al Malecón. Ubicado en uno de los edificios más emblemáticos del barrio, este apartamento ofrece luminosidad excepcional y acabados de primera calidad.',
+      description: 'Espectacular penthouse en el corazón del Vedado con vistas panorámicas al Malecón.',
       price: '$185,000',
       priceValue: 185000,
       location: 'Vedado',
@@ -88,23 +85,23 @@ async function main() {
       newListing: true,
       verified: false,
       quickResponse: true,
-      images: JSON.stringify([
-        { url: 'https://drive.google.com/uc?export=view&id=16Ctdi_pK_gH6F4XEusVRfk9XdTyNfXBu', alt: 'Vista al Malecón' },
-        { url: 'https://drive.google.com/uc?export=view&id=1YeEZOKv_-7mT7x890mbovyV1JKCaolTB', alt: 'Sala con balcón' }
-      ]),
-      amenities: JSON.stringify([
+      images: [
+        { url: 'https://i.ibb.co/cS4gcMWs/neighborhood-vedado.png', alt: 'Vista al Malecón' },
+        { url: 'https://i.ibb.co/Tq7vQWG7/hero-havana.png', alt: 'Sala con balcón' }
+      ],
+      amenities: [
         'Vistas panorámicas al Malecón',
         'Balcón amplio',
         'Recién renovado',
         'Pisos de mármol',
         'Cocina equipada'
-      ]),
+      ],
       agentId: agent.id
     },
     {
       slug: 'palacete-tropical-siboney',
       title: 'Palacete Tropical',
-      description: 'Impresionante palacete en Siboney con amplios jardines y piscina. Esta joya arquitectónica combina el encanto colonial con amenidades modernas en una de las zonas más exclusivas de La Habana.',
+      description: 'Impresionante palacete en Siboney con amplios jardines y piscina.',
       price: '$890,000',
       priceValue: 890000,
       location: 'Siboney',
@@ -119,24 +116,24 @@ async function main() {
       newListing: false,
       verified: true,
       quickResponse: false,
-      images: JSON.stringify([
-        { url: 'https://drive.google.com/uc?export=view&id=1n6F01gnYtM2YUuG_ioYCadkdxAdYarZk', alt: 'Fachada principal' },
-        { url: 'https://drive.google.com/uc?export=view&id=1vGKp1RbaNBxwMy3ui4DS0GD2hyKwU8z6', alt: 'Jardín con piscina' }
-      ]),
-      amenities: JSON.stringify([
+      images: [
+        { url: 'https://i.ibb.co/pv4bcyms/neighborhood-miramar.png', alt: 'Fachada principal' },
+        { url: 'https://i.ibb.co/DPZ95jFs/neighborhood-habana-vieja.png', alt: 'Jardín con piscina' }
+      ],
+      amenities: [
         'Piscina privada',
         'Jardín tropical extenso',
         'Garaje para 4 autos',
         'Casa de huéspedes',
         'Barbacoa exterior',
         'Sistema de seguridad completo'
-      ]),
+      ],
       agentId: agent.id
     },
     {
       slug: 'casa-familiar-cerro',
       title: 'Casa Familiar',
-      description: 'Acogedora casa familiar en el Cerro, perfecta para familias que buscan un hogar espacioso a precio accesible. Excelente ubicación cerca de escuelas y comercios.',
+      description: 'Acogedora casa familiar en el Cerro.',
       price: '$35,000',
       priceValue: 35000,
       location: 'Cerro',
@@ -151,20 +148,20 @@ async function main() {
       newListing: false,
       verified: false,
       quickResponse: false,
-      images: JSON.stringify([
-        { url: 'https://drive.google.com/uc?export=view&id=1I1mvDesqWEZ6HN8edqrcenUbnx13spNK', alt: 'Fachada' }
-      ]),
-      amenities: JSON.stringify([
+      images: [
+        { url: 'https://i.ibb.co/DPZ95jFs/neighborhood-habana-vieja.png', alt: 'Fachada' }
+      ],
+      amenities: [
         'Patio trasero',
         'Cerca de transporte público',
         'Zona residencial tranquila'
-      ]),
+      ],
       agentId: agent.id
     },
     {
       slug: 'estudio-san-rafael',
       title: 'Estudio San Rafael',
-      description: 'Compacto estudio en Centro Habana, ideal para inversión o primera vivienda.',
+      description: 'Compacto estudio en Centro Habana.',
       price: '$75,000',
       priceValue: 75000,
       location: 'Centro Habana',
@@ -178,19 +175,19 @@ async function main() {
       newListing: false,
       verified: false,
       quickResponse: false,
-      images: JSON.stringify([
-        { url: 'https://drive.google.com/uc?export=view&id=16Ctdi_pK_gH6F4XEusVRfk9XdTyNfXBu', alt: 'Interior' }
-      ]),
-      amenities: JSON.stringify([
+      images: [
+        { url: 'https://i.ibb.co/cS4gcMWs/neighborhood-vedado.png', alt: 'Interior' }
+      ],
+      amenities: [
         'Céntrico',
         'Balcón pequeño'
-      ]),
+      ],
       agentId: agent.id
     },
     {
       slug: 'apartamento-moderno-nuevo-vedado',
       title: 'Apartamento Moderno',
-      description: 'Apartamento renovado en Nuevo Vedado con respuesta rápida del vendedor.',
+      description: 'Apartamento renovado en Nuevo Vedado.',
       price: '$120,000',
       priceValue: 120000,
       location: 'Nuevo Vedado',
@@ -204,14 +201,14 @@ async function main() {
       newListing: false,
       verified: false,
       quickResponse: true,
-      images: JSON.stringify([
-        { url: 'https://drive.google.com/uc?export=view&id=1YeEZOKv_-7mT7x890mbovyV1JKCaolTB', alt: 'Sala moderna' }
-      ]),
-      amenities: JSON.stringify([
+      images: [
+        { url: 'https://i.ibb.co/Tq7vQWG7/hero-havana.png', alt: 'Sala moderna' }
+      ],
+      amenities: [
         'Recién pintado',
         'Ventanas nuevas',
         'Cerca de parques'
-      ]),
+      ],
       agentId: agent.id
     }
   ];
