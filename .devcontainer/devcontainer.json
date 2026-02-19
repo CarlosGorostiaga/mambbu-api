@@ -1,0 +1,16 @@
+{
+  "name": "Mambbu API",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "api",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "prisma.prisma"
+      ]
+    }
+  },
+  "postCreateCommand": "npm install"
+}

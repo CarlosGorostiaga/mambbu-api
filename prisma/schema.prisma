@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  id                String   @id @default(uuid())
+  slug              String   @unique
+  title             String
+  description       String
+  price             String
+  priceValue        Int
+  location          String
+  locationDistrict  String
+  type              String
+  status            String   @default("available")
+  bedrooms          Int
+  bathrooms         Int
+  area              String
+  yearBuilt         Int?
+  featured          Boolean  @default(false)
+  newListing        Boolean  @default(false)
+  verified          Boolean  @default(false)
+  quickResponse     Boolean  @default(false)
+  images            Json
+  amenities         Json
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  agentId           String
+  agent             Agent    @relation(fields: [agentId], references: [id])
+
+  @@map("properties")
+}
+
+model Agent {
+  id              String     @id @default(uuid())
+  name            String
+  avatar          String
+  rating          Int        @default(5)
+  reviews         Int        @default(0)
+  responseTime    String     @default("Menos de 1 hora")
+  activeListings  Int        @default(0)
+  salesClosed     Int        @default(0)
+  phone           String?
+  whatsapp        String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  properties      Property[]
+  agencyId        String?
+  agency          Agency?    @relation(fields: [agencyId], references: [id])
+
+  @@map("agents")
+}
+
+model Agency {
+  id          String   @id @default(uuid())
+  name        String
+  logo        String?
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  agents      Agent[]
+
+  @@map("agencies")
+}
