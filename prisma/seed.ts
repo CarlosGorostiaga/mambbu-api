@@ -17,7 +17,7 @@ async function main() {
   const agent = await prisma.agent.create({
     data: {
       name: 'Elena Gómez',
-      avatar: 'https://i.ibb.co/213PcgWX/team.png',
+      avatar: 'https://i.ibb.co/9kCTdGJM/hero-havana.png',
       rating: 5,
       reviews: 48,
       responseTime: 'Menos de 1 hora',
@@ -50,10 +50,10 @@ async function main() {
       verified: false,
       quickResponse: false,
       images: [
-        { url: 'https://i.ibb.co/pv4bcyms/neighborhood-miramar.png', alt: 'Fachada Villa Mar Azul' },
-        { url: 'https://i.ibb.co/Tq7vQWG7/hero-havana.png', alt: 'Sala de estar elegante' },
-        { url: 'https://i.ibb.co/cS4gcMWs/neighborhood-vedado.png', alt: 'Jardín tropical' },
-        { url: 'https://i.ibb.co/DPZ95jFs/neighborhood-habana-vieja.png', alt: 'Cocina moderna' }
+        { url: 'https://i.ibb.co/GY5MX56/neighborhood-miramar.png', alt: 'Fachada Villa Mar Azul' },
+        { url: 'https://i.ibb.co/9kCTdGJM/hero-havana.png', alt: 'Sala de estar elegante' },
+        { url: 'https://i.ibb.co/XxfCzPMr/neighborhood-vedado.png', alt: 'Jardín tropical' },
+        { url: 'https://i.ibb.co/p6fb9XRL/neighborhood-habana-vieja.png', alt: 'Cocina moderna' }
       ],
       amenities: [
         'Pisos de mosaico originales',
@@ -86,8 +86,8 @@ async function main() {
       verified: false,
       quickResponse: true,
       images: [
-        { url: 'https://i.ibb.co/cS4gcMWs/neighborhood-vedado.png', alt: 'Vista al Malecón' },
-        { url: 'https://i.ibb.co/Tq7vQWG7/hero-havana.png', alt: 'Sala con balcón' }
+        { url: 'https://i.ibb.co/XxfCzPMr/neighborhood-vedado.png', alt: 'Vista al Malecón' },
+        { url: 'https://i.ibb.co/9kCTdGJM/hero-havana.png', alt: 'Sala con balcón' }
       ],
       amenities: [
         'Vistas panorámicas al Malecón',
@@ -117,8 +117,8 @@ async function main() {
       verified: true,
       quickResponse: false,
       images: [
-        { url: 'https://i.ibb.co/pv4bcyms/neighborhood-miramar.png', alt: 'Fachada principal' },
-        { url: 'https://i.ibb.co/DPZ95jFs/neighborhood-habana-vieja.png', alt: 'Jardín con piscina' }
+        { url: 'https://i.ibb.co/GY5MX56/neighborhood-miramar.png', alt: 'Fachada principal' },
+        { url: 'https://i.ibb.co/p6fb9XRL/neighborhood-habana-vieja.png', alt: 'Jardín con piscina' }
       ],
       amenities: [
         'Piscina privada',
@@ -149,7 +149,7 @@ async function main() {
       verified: false,
       quickResponse: false,
       images: [
-        { url: 'https://i.ibb.co/DPZ95jFs/neighborhood-habana-vieja.png', alt: 'Fachada' }
+        { url: 'https://i.ibb.co/p6fb9XRL/neighborhood-habana-vieja.png', alt: 'Fachada' }
       ],
       amenities: [
         'Patio trasero',
@@ -176,7 +176,7 @@ async function main() {
       verified: false,
       quickResponse: false,
       images: [
-        { url: 'https://i.ibb.co/cS4gcMWs/neighborhood-vedado.png', alt: 'Interior' }
+        { url: 'https://i.ibb.co/XxfCzPMr/neighborhood-vedado.png', alt: 'Interior' }
       ],
       amenities: [
         'Céntrico',
@@ -202,7 +202,7 @@ async function main() {
       verified: false,
       quickResponse: true,
       images: [
-        { url: 'https://i.ibb.co/Tq7vQWG7/hero-havana.png', alt: 'Sala moderna' }
+        { url: 'https://i.ibb.co/9kCTdGJM/hero-havana.png', alt: 'Sala moderna' }
       ],
       amenities: [
         'Recién pintado',
