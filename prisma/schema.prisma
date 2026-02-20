@@ -16,6 +16,7 @@ model Property {
   priceValue        Int
   location          String
   locationDistrict  String
+  address           String?  // ← NUEVO: Dirección exacta (opcional)
   type              String
   status            String   @default("available")
   bedrooms          Int

@@ -10,6 +10,7 @@ export interface CreatePropertyRequest {
   priceValue: number;
   location: string;
   locationDistrict: string;
+  address?: string; // ← AÑADIR
   type: string;
   bedrooms: number;
   bathrooms: number;
