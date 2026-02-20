@@ -10,6 +10,7 @@ export async function getProperties(req: Request, res: Response) {
       maxPrice,
       bedrooms,
       status = 'available',
+      featured,
       sortBy = 'newest',
       page = '1',
       perPage = '6'
@@ -38,8 +39,12 @@ export async function getProperties(req: Request, res: Response) {
       where.bedrooms = { gte: Number(bedrooms) };
     }
 
+    if (featured !== undefined) {
+      where.featured = featured === 'true';
+    }
+
     // Ordenamiento
-    let orderBy: any = { createdAt: 'desc' }; // default: newest
+    let orderBy: any = { createdAt: 'desc' };
     
     if (sortBy === 'price-asc') {
       orderBy = { priceValue: 'asc' };
@@ -76,6 +81,24 @@ export async function getProperties(req: Request, res: Response) {
       take: perPageNum
     });
 
+    // ✅ Ordenar imágenes de cada propiedad
+    const sortedProperties = properties.map(property => {
+      const images = property.images as any[];
+      
+      if (Array.isArray(images) && images.length > 0) {
+        // Ordenar: isPrimary primero, luego por order
+        const sortedImages = [...images].sort((a, b) => {
+          if (a.isPrimary) return -1;
+          if (b.isPrimary) return 1;
+          return (a.order || 0) - (b.order || 0);
+        });
+
+        return { ...property, images: sortedImages };
+      }
+
+      return property;
+    });
+
     const totalPages = Math.ceil(total / perPageNum);
 
     res.json({
@@ -84,7 +107,7 @@ export async function getProperties(req: Request, res: Response) {
       totalPages,
       currentPage: pageNum,
       perPage: perPageNum,
-      data: properties
+      data: sortedProperties // ← Usar propiedades con imágenes ordenadas
     });
   } catch (error) {
     console.error('Error fetching properties:', error);
@@ -115,6 +138,19 @@ export async function getPropertyBySlug(req: Request, res: Response) {
         success: false,
         error: 'Propiedad no encontrada'
       });
+    }
+
+    // ✅ Ordenar imágenes
+    const images = property.images as any[];
+    
+    if (Array.isArray(images) && images.length > 0) {
+      const sortedImages = [...images].sort((a, b) => {
+        if (a.isPrimary) return -1;
+        if (b.isPrimary) return 1;
+        return (a.order || 0) - (b.order || 0);
+      });
+
+      property.images = sortedImages as any;
     }
 
     res.json({

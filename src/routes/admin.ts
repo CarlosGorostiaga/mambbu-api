@@ -14,6 +14,7 @@ router.post('/login', adminController.login);
 // Properties (protegidas con authenticate)
 router.post('/properties', authenticate, adminController.createProperty);
 router.post('/properties/:propertyId/images', authenticate, upload.array('images', 10), adminController.uploadPropertyImages);
+router.put('/properties/:propertyId/images/reorder', authenticate, adminController.reorderPropertyImages); // ← NUEVA
 router.put('/properties/:id', authenticate, adminController.updateProperty);
 router.delete('/properties/:id', authenticate, adminController.deleteProperty);
 
