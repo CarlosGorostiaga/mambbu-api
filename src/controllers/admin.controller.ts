@@ -87,24 +87,33 @@ export async function uploadPropertyImages(req: Request, res: Response) {
       return res.status(400).json({ error: 'No files uploaded' });
     }
 
-    // Subir a Cloudflare R2
-    const imageUrls = await uploadMultipleImages(files);
-
     // Obtener imágenes existentes de la propiedad
     const property = await prisma.property.findUnique({
       where: { id: propertyId },
-      select: { images: true },
+      select: { images: true, title: true },
     });
 
     const existingImages = (property?.images as any[]) || [];
     const startOrder = existingImages.length;
 
-    // Crear objetos de imagen con order e isPrimary
-    const newImages = imageUrls.map((url, index) => ({
+    // Subir a Cloudflare R2 con manejo de errores parciales
+    const { urls: uploadedUrls, failed: failedCount } = await uploadMultipleImages(files);
+
+    // Si no se subió ninguna imagen, error completo
+    if (uploadedUrls.length === 0) {
+      return res.status(500).json({ 
+        error: 'Failed to upload all images',
+        failed: failedCount,
+        total: files.length
+      });
+    }
+
+    // Crear objetos de imagen con las que SÍ se subieron
+    const newImages = uploadedUrls.map((url, index) => ({
       url,
-      alt: `${req.body.title || 'Propiedad'} - Imagen ${startOrder + index + 1}`,
+      alt: `${property?.title || req.body.title || 'Propiedad'} - Imagen ${startOrder + index + 1}`,
       order: startOrder + index,
-      isPrimary: startOrder === 0 && index === 0, // Primera imagen es principal por defecto
+      isPrimary: startOrder === 0 && index === 0,
     }));
 
     // Combinar con imágenes existentes
@@ -116,7 +125,26 @@ export async function uploadPropertyImages(req: Request, res: Response) {
       data: { images: allImages },
     });
 
-    res.json({ success: true, data: updatedProperty });
+    // Respuesta indicando éxito parcial si hubo fallos
+    if (failedCount > 0) {
+      return res.status(207).json({ // 207 Multi-Status (éxito parcial)
+        success: true,
+        partial: true,
+        uploaded: uploadedUrls.length,
+        failed: failedCount,
+        total: files.length,
+        message: `${uploadedUrls.length} de ${files.length} imágenes subidas correctamente. ${failedCount} fallaron.`,
+        data: updatedProperty
+      });
+    }
+
+    // Éxito completo
+    res.json({ 
+      success: true, 
+      uploaded: uploadedUrls.length,
+      total: files.length,
+      data: updatedProperty 
+    });
   } catch (error) {
     console.error('Upload images error:', error);
     res.status(500).json({ error: 'Failed to upload images' });

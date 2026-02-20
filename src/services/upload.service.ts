@@ -42,21 +42,50 @@ export async function uploadImage(file: Express.Multer.File): Promise<string> {
   }
 }
 
-// ✅ Procesar en lotes para evitar saturar memoria
-export async function uploadMultipleImages(files: Express.Multer.File[]): Promise<string[]> {
-  const batchSize = 5; // Procesar 5 imágenes a la vez
+// ✅ Procesar en lotes con manejo de errores parciales
+export async function uploadMultipleImages(files: Express.Multer.File[]): Promise<{ 
+  urls: string[], 
+  failed: number 
+}> {
+  const batchSize = 5;
   const results: string[] = [];
+  let failedCount = 0;
 
   console.log(`📸 Subiendo ${files.length} imágenes en lotes de ${batchSize}...`);
 
   for (let i = 0; i < files.length; i += batchSize) {
     const batch = files.slice(i, i + batchSize);
-    console.log(`   Procesando lote ${Math.floor(i / batchSize) + 1}/${Math.ceil(files.length / batchSize)} (${batch.length} imágenes)`);
+    const batchNum = Math.floor(i / batchSize) + 1;
+    const totalBatches = Math.ceil(files.length / batchSize);
     
-    const batchUrls = await Promise.all(batch.map(file => uploadImage(file)));
-    results.push(...batchUrls);
+    console.log(`   Procesando lote ${batchNum}/${totalBatches} (${batch.length} imágenes)`);
+    
+    try {
+      // Intentar subir cada imagen del lote individualmente
+      const batchResults = await Promise.allSettled(
+        batch.map(file => uploadImage(file))
+      );
+
+      // Separar éxitos y fallos
+      batchResults.forEach((result, index) => {
+        if (result.status === 'fulfilled') {
+          results.push(result.value);
+        } else {
+          failedCount++;
+          console.error(`   ❌ Imagen ${i + index + 1} falló:`, result.reason);
+        }
+      });
+
+    } catch (error) {
+      console.error(`❌ Error crítico en lote ${batchNum}:`, error);
+      failedCount += batch.length;
+    }
   }
 
   console.log(`✅ ${results.length} imágenes subidas correctamente`);
-  return results;
+  if (failedCount > 0) {
+    console.log(`⚠️  ${failedCount} imágenes fallaron`);
+  }
+
+  return { urls: results, failed: failedCount };
 }
