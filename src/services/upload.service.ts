@@ -42,7 +42,21 @@ export async function uploadImage(file: Express.Multer.File): Promise<string> {
   }
 }
 
+// ✅ Procesar en lotes para evitar saturar memoria
 export async function uploadMultipleImages(files: Express.Multer.File[]): Promise<string[]> {
-  const uploadPromises = files.map((file) => uploadImage(file));
-  return await Promise.all(uploadPromises);
+  const batchSize = 5; // Procesar 5 imágenes a la vez
+  const results: string[] = [];
+
+  console.log(`📸 Subiendo ${files.length} imágenes en lotes de ${batchSize}...`);
+
+  for (let i = 0; i < files.length; i += batchSize) {
+    const batch = files.slice(i, i + batchSize);
+    console.log(`   Procesando lote ${Math.floor(i / batchSize) + 1}/${Math.ceil(files.length / batchSize)} (${batch.length} imágenes)`);
+    
+    const batchUrls = await Promise.all(batch.map(file => uploadImage(file)));
+    results.push(...batchUrls);
+  }
+
+  console.log(`✅ ${results.length} imágenes subidas correctamente`);
+  return results;
 }
