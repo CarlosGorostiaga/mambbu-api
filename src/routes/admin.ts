@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { authenticate } from '../middleware/auth';
-import * as adminController from '../controllers/admin.controller';
+import { authenticate } from '../middleware/auth.js';
+import * as adminController from '../controllers/admin.controller.js';
 
 const router = Router();
 

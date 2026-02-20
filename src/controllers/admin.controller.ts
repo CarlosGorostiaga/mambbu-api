@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import prisma from '../lib/prisma';
-import { generateToken } from '../middleware/auth';
-import { uploadMultipleImages } from '../services/upload.service';
-import type { LoginRequest, CreatePropertyRequest } from '../types/auth';
+import prisma from '../lib/prisma.js';
+import { generateToken } from '../middleware/auth.js';
+import { uploadMultipleImages } from '../services/upload.service.js';
+import type { LoginRequest, CreatePropertyRequest } from '../types/auth.js';
 
 // Login admin
 export async function login(req: Request<{}, {}, LoginRequest>, res: Response) {
